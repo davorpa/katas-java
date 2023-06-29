@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.Scanner;
 import java.util.function.DoubleConsumer;
+import java.util.function.DoubleSupplier;
 
 /**
  * Crear un sistema para un ATM que permita:
@@ -47,7 +48,7 @@ public class Main
 				}
 			})));
 			options.put(3, new Option("See current funds", Optional.of(() ->
-				System.out.format("Current funds is: %f%n", balancer.get())
+				System.out.format("Current funds is: %f%n", balancer.getAsDouble())
 			)));
 			options.put(0, new Option("Exit", Optional.empty()));
 
