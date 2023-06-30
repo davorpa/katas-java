@@ -47,8 +47,8 @@ public class Main
 					System.out.println(e.getMessage());
 				}
 			})));
-			options.put(3, new Option("See current funds", Optional.of(() ->
-				System.out.format("Current funds is: %f%n", balancer.getAsDouble())
+			options.put(3, new Option("See account balance", Optional.of(() ->
+				System.out.format("Current balance is: %f%n", balancer.getAsDouble())
 			)));
 			options.put(0, new Option("Exit", Optional.empty()));
 
