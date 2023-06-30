@@ -39,7 +39,7 @@ class Account implements Withdrawable, Depositable, FundsAccessor
 					//raise exception if filter limit results
 					.orElseThrow(newIllegalArgumentException("Amount to withdraw must not be negative."))
 			)
-			// execute consumer action (increment funds)
+			// execute consumer action (decrease funds)
 			.ifPresent(
 					x -> funds.updateAndGet(
 							(Double current) -> current - OptionalDouble.of(x) // wrap into Optional
