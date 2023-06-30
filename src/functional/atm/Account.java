@@ -2,6 +2,8 @@ package functional.atm;
 
 import java.util.OptionalDouble;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.DoublePredicate;
+import java.util.function.Supplier;
 
 class Account implements Withdrawable, Depositable, FundsAccessor
 {
@@ -17,9 +19,10 @@ class Account implements Withdrawable, Depositable, FundsAccessor
 			.of(
 				OptionalDouble.of(amount) // wrap into Optional
 					.stream() // to Stream
-					.filter(x -> Double.compare(x, 0) >= 0) //accept only positive values
+					.filter(isPositiveOrZero()) //accept only positive values
 					.findFirst() //to Optional
-					.orElseThrow(() -> new IllegalArgumentException("Amount to deposit must not be negative."))
+					//raise exception if filter limit results
+					.orElseThrow(newIllegalArgumentException("Amount to deposit must not be negative."))
 			)
 			// execute consumer action (increment funds)
 			.ifPresent(x -> funds.updateAndGet((Double current) -> current + x));
@@ -31,11 +34,10 @@ class Account implements Withdrawable, Depositable, FundsAccessor
 			.of(
 				OptionalDouble.of(amount) // wrap into Optional
 					.stream() // to Stream
-					//accept only positive values
-					.filter(x -> Double.compare(x, 0) >= 0)
+					.filter(isPositiveOrZero()) //accept only positive values
 					.findFirst() //to Optional
 					//raise exception if filter limit results
-					.orElseThrow(() -> new IllegalArgumentException("Amount to withdraw must not be negative."))
+					.orElseThrow(newIllegalArgumentException("Amount to withdraw must not be negative."))
 			)
 			// execute consumer action (increment funds)
 			.ifPresent(
@@ -43,10 +45,10 @@ class Account implements Withdrawable, Depositable, FundsAccessor
 							(Double current) -> current - OptionalDouble.of(x) // wrap into Optional
 								.stream() // to Stream
 								//accept only target positive funds
-								.filter(value -> Double.compare(current - value, 0) >= 0)
+								.filter(hasSufficientFunds(current))
 								.findFirst() //to Optional
 								//raise exception if filter limit results
-								.orElseThrow(() -> new IllegalStateException("Insufficient funds."))
+								.orElseThrow(newIllegalStateException("Insufficient funds."))
 							)
 				);
 	}
@@ -54,5 +56,22 @@ class Account implements Withdrawable, Depositable, FundsAccessor
 	@Override
 	public double getFunds() {
 		return this.funds.get();
+	}
+
+
+	private static DoublePredicate isPositiveOrZero() {
+		return x -> Double.compare(x, 0) >= 0;
+	}
+
+	private static DoublePredicate hasSufficientFunds(double current) {
+		return x -> Double.compare(current - x, 0) >= 0;
+	}
+
+	private static Supplier<? extends IllegalArgumentException> newIllegalArgumentException(String message) {
+		return () -> new IllegalArgumentException(message);
+	}
+
+	private static Supplier<? extends IllegalStateException> newIllegalStateException(String message) {
+		return () -> new IllegalStateException(message);
 	}
 }
