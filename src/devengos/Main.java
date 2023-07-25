@@ -13,7 +13,7 @@ public class Main {
         Deposito deposito = new Deposito(1_000.0);
         CalculadoraDevengo calculadora = new CalculadoraDevengo(2.5);
 
-        double totalDevengado = calculadora.calcular(deposito, 12);
+        double totalDevengado = calculadora.calcularTotalDevengado(deposito, 12);
 
         System.out.printf("%f%n", totalDevengado);
     }
