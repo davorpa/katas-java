@@ -13,6 +13,6 @@ public class CalculadoraDevengo {
     }
 
     public double calcularTotalDevengado(final Deposito deposito, final int numeroDeMeses) {
-        return deposito.getCantidad() * Math.pow(1.0 + interesMensual, numeroDeMeses);
+        return deposito.getCantidad() * Math.pow(1.0 + interesMensual / 100, numeroDeMeses);
     }
 }

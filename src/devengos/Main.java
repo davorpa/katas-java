@@ -10,7 +10,7 @@ package devengos;
 public class Main {
 
     public static void main(String[] args) {
-        Deposito deposito = new Deposito(1_000.0);
+        Deposito deposito = new Deposito(1_000_000.0);
         CalculadoraDevengo calculadora = new CalculadoraDevengo(2.5);
 
         double totalDevengado = calculadora.calcularTotalDevengado(deposito, 12);
